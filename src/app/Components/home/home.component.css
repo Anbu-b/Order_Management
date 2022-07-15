@@ -18,6 +18,18 @@
     font-weight: bold;
 }
 .align{
-    margin-left: 82%;
     font-size: 30px;
+}
+.mat-toolbar-row, .mat-toolbar-single-row{
+place-content: space-between;
+}
+.alignitem{
+    display: flex;
+    justify-content: end;
+    color: red;
+    font-size: 18px;
+    margin: 10px;
+}
+.color{
+    color: green !important;
 }

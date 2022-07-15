@@ -3,12 +3,7 @@
         ORDER MANAGEMENT
         <span class="align mdi mdi-logout" (click)="logoutconfirm()"></span>
     </mat-toolbar>
-  
-        
-    
 </div>
-
-
 <div class="row">
     <div class="col-md-5 titleL1">{{'Labels.title' | translate}}</div>
 </div>
@@ -20,6 +15,7 @@
     <div class="col-md-6"> <button class="submit-btn Fltright margin10" (click)="NewOrder()">{{'Labels.newOrder' |
             translate}}</button></div>
 </div>
+<span class="alignitem color">{{Submitmsg}}</span>
 <div class="padd5">
     <table class="ViewScreenTable" id="OrderTable">
 
@@ -37,12 +33,12 @@
         <tbody>
             <p class="titleL2" *ngIf="!pagedItems || pagedItems?.length==0">No Records to display</p>
             <tr *ngFor="let list of pagedItems; let i = index" [class.listTableSelected]="i == HighlightRow">
-                <td (click)="editfactor(list,i)">{{list.orderNum}}</td>
-                <td (click)="editfactor(list,i)">{{list.orderDueDate | date: 'dd/MM/yyyy'}}</td>
-                <td (click)="editfactor(list,i)">{{list.custName}}</td>
-                <td (click)="editfactor(list,i)">{{list.custAdd}}</td>
-                <td (click)="editfactor(list,i)">{{list.custPhn}}</td>
-                <td (click)="editfactor(list,i)">{{list.total}}</td>
+                <td >{{list.orderNum}}</td>
+                <td >{{list.orderDueDate | date: 'dd/MM/yyyy'}}</td>
+                <td >{{list.custName}}</td>
+                <td >{{list.custAdd}}</td>
+                <td >{{list.custPhn}}</td>
+                <td >{{list.total}}</td>
 
                 <td class="Action_icon"> <span class="mdi mdi-pencil" (click)="editfactor(list,i)"></span>&nbsp;<span
                         class="mdi mdi-delete" (click)="DeleteConfirm(list,i)"></span>
@@ -175,6 +171,7 @@
                 <button type="button" class="submit-btn Fltright margin10" (click)="close()">{{'Labels.no' |
                     translate}}</button>
             </div>
+           <div class="alignitem">{{validationmsg}}</div>
         </div>
     </div>
 </div>

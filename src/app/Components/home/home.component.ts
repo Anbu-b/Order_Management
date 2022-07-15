@@ -18,11 +18,11 @@ export class HomeComponent implements OnInit {
     { "orderNum": 10012321323, "orderDueDate": new Date('2022-04-12'), "custName": 'Arun', "custAdd": 'Chennai', "custPhn": 9843653432, "total": 1500 },
     { "orderNum": 10012321344, "orderDueDate": new Date('2023-11-11'), "custName": 'Raju', "custAdd": 'Mumbai', "custPhn": 9843653432, "total": 2700 },
     { "orderNum": 10012321555, "orderDueDate": new Date('2022-11-14'), "custName": 'Ram', "custAdd": 'Jaipur', "custPhn": 984443432, "total": 15400 },
-    { "orderNum": 10012321239, "orderDueDate": new Date('2022-11-28'), "custName": 'Selva', "custAdd": 'Vishak', "custPhn": 9843653432, "total": 4500 },
+    { "orderNum": 10024234349, "orderDueDate": new Date('2022-11-28'), "custName": 'Madan', "custAdd": 'Vishak', "custPhn": 9843853432, "total": 4500 },
     { "orderNum": 10012321367, "orderDueDate": new Date('2022-09-12'), "custName": 'Durai', "custAdd": 'Andhra', "custPhn": 9843653432, "total": 1533 },
-    { "orderNum": 10012321555, "orderDueDate": new Date('2022-04-30'), "custName": 'Ram', "custAdd": 'Jaipur', "custPhn": 984443432, "total": 15400 },
+    { "orderNum": 10012321575, "orderDueDate": new Date('2022-04-30'), "custName": 'Ramesh', "custAdd": 'Bangalore', "custPhn": 9823443432, "total": 15400 },
     { "orderNum": 10012321239, "orderDueDate": new Date('2022-08-02'), "custName": 'Selva', "custAdd": 'Vishak', "custPhn": 9843653432, "total": 4500 },
-    { "orderNum": 10012321367, "orderDueDate": new Date('2022-07-28'), "custName": 'Durai', "custAdd": 'Andhra', "custPhn": 9843653432, "total": 1533 }
+    { "orderNum": 10012344367, "orderDueDate": new Date('2022-07-28'), "custName": 'Sam', "custAdd": 'Patna', "custPhn": 9843653432, "total": 1533 }
   ];
   Model: string = '';
   showOverlay: string = '';
@@ -32,7 +32,9 @@ export class HomeComponent implements OnInit {
   ConfirmModal: boolean = false;
   confrmmsg: string = '';
   @ViewChild('orderform') CurrentForm: any = [];
-  // orderform: NgForm=NgForm;
+  validationmsg:string='';
+  Submitmsg:string='';
+  interval:any;
   constructor(
     private pagerService: PagerService, private router: Router, public datepipe: DatePipe,
     public authservice: AuthService) {
@@ -50,20 +52,24 @@ export class HomeComponent implements OnInit {
   }
   setPage(page: number) {
     this.pager = this.pagerService.getPager(this.Fulllist.length, page);
-    this.pagedItems = this.Fulllist.slice(this.pager.startIndex, this.pager.endIndex + 1);
+    this.pagedItems =Object.assign([],this.Fulllist.slice(this.pager.startIndex, this.pager.endIndex + 1));
   }
   editfactor(list: any, index: any) {
     this.Model = 'block';
     this.showOverlay = 'yes';
     this.btnname = 'Update';
+    this.ModelList={};
+    this.validationmsg='';
     this.ConfirmModal = false;
-    this.ModelList = list;
+    this.ModelList =Object.assign({},list);
     this.ModelList.orderDueDate = this.datepipe.transform(list.orderDueDate, 'yyyy-MM-dd');
   }
   NewOrder() {
     this.Model = 'block';
     this.showOverlay = 'yes';
     this.btnname = 'Save';
+    this.ModelList={};
+    this.validationmsg='';
   }
   confirm() {
     if(this.confrmmsg == 'logout'){
@@ -94,16 +100,34 @@ export class HomeComponent implements OnInit {
   }
   submit() {
     if (this.btnname == 'Save') {
-      this.Fulllist.push(this.ModelList);
+      if (this.Fulllist.findIndex((xx: any) => xx.orderNum.toString() == this.ModelList.orderNum) == -1){
+            this.Fulllist.push(this.ModelList);
+            this.validationmsg='';
+            this.setPage(this.pager.currentPage)
+            this.close();
+            this.Submsg('Order created successfully');
+      }
+      else{
+        this.validationmsg="*Order number already exist";
+
+      }
     }
-    else {
-      if (this.Fulllist.findIndex((xx: any) => xx.orderNum == this.ModelList.orderNum) != -1) {
+    else if (this.Fulllist.findIndex((xx: any) => xx.orderNum.toString() == this.ModelList.orderNum) != -1) {
         let index = this.Fulllist.findIndex((xx: any) => xx.orderNum == this.ModelList.orderNum);
-        this.Fulllist[index] = this.ModelList;
+        this.Fulllist[index] =Object.assign({},this.ModelList);
+        this.setPage(this.pager.currentPage)
+        this.close();
+        this.Submsg('Order modified successfully');
       }
 
-    }
-    this.close();
+    
+   
+  }
+  Submsg(msg:any){
+    this.Submitmsg = msg;
+   this.interval =setTimeout(() => {
+      this.Submitmsg = '';
+    }, 3000);
   }
   close() {
     this.Model = 'none';
@@ -125,5 +149,8 @@ export class HomeComponent implements OnInit {
     this.showOverlay = 'yes';
     this.ConfirmModal = true;
 
+  }
+  ngOnDestroy(){
+    clearInterval(this.interval);
   }
 }
