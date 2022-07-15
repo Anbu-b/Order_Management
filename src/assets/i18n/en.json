@@ -1,0 +1,20 @@
+{
+    "Labels": {
+        "login": "Login",
+        "username": "Username",
+        "password": "Password",
+        "rememberme": "Remember me",
+        "title": "Order System",
+        "newOrder": "New Order",
+        "exisOrder": "Existing Orders",
+        "orderNum": "Order Number",
+        "orderDueDate": "Order Due Date",
+        "custName": "Customer Name",
+        "custAdd": "Customer Address",
+        "custPhn": "Customer Phone",
+        "total": "Total",
+        "close": "Close",
+        "yes": "Yes",
+        "no": "No"
+    }
+}

@@ -1,0 +1,23 @@
+#main {
+    transition: margin-left .5s;
+}
+.common-color {
+    background-color:#002576; 
+    color: white;
+}
+.Action_icon{
+    font-size: 20px;
+}
+.disabled {
+    color: gray;
+}
+.margintop5{
+    margin-top: -5px;
+}
+.fontbold{
+    font-weight: bold;
+}
+.align{
+    margin-left: 82%;
+    font-size: 30px;
+}

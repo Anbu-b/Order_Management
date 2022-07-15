@@ -1,0 +1,181 @@
+<div id="main">
+    <mat-toolbar style="" class="common-color">
+        ORDER MANAGEMENT
+        <span class="align mdi mdi-logout" (click)="logoutconfirm()"></span>
+    </mat-toolbar>
+  
+        
+    
+</div>
+
+
+<div class="row">
+    <div class="col-md-5 titleL1">{{'Labels.title' | translate}}</div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-6">
+        <p class="titleL2">{{'Labels.exisOrder' | translate}}</p>
+    </div>
+    <div class="col-md-6"> <button class="submit-btn Fltright margin10" (click)="NewOrder()">{{'Labels.newOrder' |
+            translate}}</button></div>
+</div>
+<div class="padd5">
+    <table class="ViewScreenTable" id="OrderTable">
+
+        <thead class="custhead">
+            <tr>
+                <th>{{'Labels.orderNum' | translate}}</th>
+                <th>{{'Labels.orderDueDate' | translate}}</th>
+                <th>{{'Labels.custName' | translate}}</th>
+                <th>{{'Labels.custAdd' | translate}}</th>
+                <th>{{'Labels.custPhn' | translate}}</th>
+                <th>{{'Labels.total' | translate}}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <p class="titleL2" *ngIf="!pagedItems || pagedItems?.length==0">No Records to display</p>
+            <tr *ngFor="let list of pagedItems; let i = index" [class.listTableSelected]="i == HighlightRow">
+                <td (click)="editfactor(list,i)">{{list.orderNum}}</td>
+                <td (click)="editfactor(list,i)">{{list.orderDueDate | date: 'dd/MM/yyyy'}}</td>
+                <td (click)="editfactor(list,i)">{{list.custName}}</td>
+                <td (click)="editfactor(list,i)">{{list.custAdd}}</td>
+                <td (click)="editfactor(list,i)">{{list.custPhn}}</td>
+                <td (click)="editfactor(list,i)">{{list.total}}</td>
+
+                <td class="Action_icon"> <span class="mdi mdi-pencil" (click)="editfactor(list,i)"></span>&nbsp;<span
+                        class="mdi mdi-delete" (click)="DeleteConfirm(list,i)"></span>
+
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+<div>
+    <ul *ngIf="pager.pages && pager.pages.length" class="pagination">
+
+        <li>Results Per Page</li>
+
+        <select [(ngModel)]="selectedPageSize" (ngModelChange)="changePageSize()">
+            <option [value]="5">5</option>
+            <option [value]="10">10</option>
+            <option [value]="15">15</option>
+        </select>
+
+        <li class="font23px margintop5" [ngClass]="{'disabled':pager.currentPage === 1}" (click)="setPage(1)">
+            <a matTooltip="First Page">
+                <span class="mdi mdi-skip-previous Action_icon"></span>
+
+            </a>
+        </li>
+        <li class="font23px margintop5" [ngClass]="{'disabled':pager.currentPage === 1}"
+            (click)="setPage(pager.currentPage - 1)">
+            <a matTooltip=" Previous Page">
+                <span class="mdi mdi-arrow-left-thick Action_icon"></span>
+
+
+            </a>
+        </li>
+
+        <li class="PaginationCurrent"> {{pager.currentPage}}</li>
+        <li>/</li>
+        <li>{{pager.totalPages}}</li>
+
+        <li class="font23px margintop5" [ngClass]="{'disabled':pager.currentPage === pager.totalPages}"
+            (click)="setPage(pager.currentPage + 1)">
+            <a matTooltip="Next Page">
+                <span class="mdi mdi-arrow-right-thick Action_icon"></span>
+            </a>
+        </li>
+        <li class="font23px margintop5" [ngClass]="{'disabled':pager.currentPage === pager.totalPages}"
+            (click)="setPage(pager.totalPages)">
+            <a matTooltip="Last Page">
+                <span class="mdi mdi-skip-next Action_icon"></span>
+
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display': Model}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 *ngIf="!ConfirmModal" class="modal-title fontbold">{{btnname==='Save'?'Create Order':'Update Order'}}</h5>
+                <h5 *ngIf="ConfirmModal" class="modal-title fontbold">Confirmation</h5>
+                <button type="button" class="close brdrnone" data-dismiss="modal" aria-label="Close" (click)="close()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form *ngIf="!ConfirmModal" #orderform="ngForm" autocomplete="off">
+                    <div class="col-md-12  form-group row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{'Labels.orderNum' | translate}}<span class="ml-1 text-danger">*</span></label>
+                                <input type="text" class="form-control" required name="ordnumb" id="ordnumb"
+                                    appOnlynumbers maxlength="15" #ordnumb='ngModel' [(ngModel)]='ModelList.orderNum'>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{'Labels.orderDueDate' | translate}}<span
+                                        class="ml-1 text-danger">*</span></label>
+                                <input type="date" class="form-control" required name="orddue" id="orddue"
+                                    #orddue='ngModel' [(ngModel)]='ModelList.orderDueDate'>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{'Labels.custName' | translate}}<span class="ml-1 text-danger">*</span></label>
+                                <input type="text" class="form-control" required name="custnam" id="custnam"
+                                    maxlength="20" #custnam='ngModel' [(ngModel)]='ModelList.custName'>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{'Labels.custAdd' | translate}}</label>
+                                <input type="text" class="form-control" name="custadd" id="custadd" maxlength="20"
+                                    #custadd='ngModel' [(ngModel)]='ModelList.custAdd'>
+                            </div>
+                        </div>
+                    </div>
+                    <div></div>
+                    <div class="col-md-12  form-group row margintop">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{'Labels.custPhn' | translate}}<span class="ml-1 text-danger">*</span></label>
+                                <input type="tel" class="form-control" required name="phn" id="phn" pattern="[0-9]*"
+                                    appOnlynumbers maxlength="15" #ordphn='ngModel' [(ngModel)]='ModelList.custPhn'
+                                    maxlength="10" minlength="10">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{'Labels.total' | translate}}<span class="ml-1 text-danger">*</span></label>
+                                <input type="tel" class="form-control" required name="tot" id="tot" appOnlynumbers
+                                    #totl='ngModel' [(ngModel)]='ModelList.total'>
+                            </div>
+                        </div>
+
+                    </div>
+                    <button type="button" class="submit-btn Fltright margin10" (click)="close()">{{'Labels.close' |
+                        translate}}</button>
+                    <button type="button" class="submit-btn Fltright margin10" [disabled]="orderform?.invalid"
+                        (click)="submit()">{{btnname}}</button>
+
+                </form>
+                <h4 *ngIf="ConfirmModal">Are you sure want to {{confrmmsg}}?</h4>
+            </div>
+            <div class="modal-footer" *ngIf="ConfirmModal">
+                <button type="button" class="submit-btn Fltright margin10" (click)="confirm()">{{'Labels.yes' |
+                    translate}}</button>
+                <button type="button" class="submit-btn Fltright margin10" (click)="close()">{{'Labels.no' |
+                    translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="opacitybox" (click)="close()" [ngClass]="{'addoverlay': showOverlay === 'yes'}"></div>
